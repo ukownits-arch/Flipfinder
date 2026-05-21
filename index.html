@@ -1,134 +1,51 @@
-<!DOCTYPE html>
+<script>
 
-<html>
+  // Load saved items when page opens
 
-<head>
+  window.onload = function() {
 
-  <title>FlipFinder</title>
+    const saved = JSON.parse(localStorage.getItem("listings")) || [];
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    saved.forEach(item => displayItem(item.name, item.price));
 
-  <style>
+  };
 
-    body {
+  function addItem() {
 
-      margin: 0;
+    const name = document.getElementById("itemName").value;
 
-      font-family: Arial;
+    const price = document.getElementById("price").value;
 
-      background: #0f172a;
+    if (!name || !price) return;
 
-      color: white;
+    const item = { name, price };
 
-      text-align: center;
+    // Save to localStorage
 
-    }
+    const existing = JSON.parse(localStorage.getItem("listings")) || [];
 
-    .container {
+    existing.push(item);
 
-      padding: 40px 20px;
+    localStorage.setItem("listings", JSON.stringify(existing));
 
-    }
+    displayItem(name, price);
 
-    input {
+    document.getElementById("itemName").value = "";
 
-      padding: 10px;
+    document.getElementById("price").value = "";
 
-      margin: 5px;
+  }
 
-      border-radius: 5px;
+  function displayItem(name, price) {
 
-      border: none;
+    const listing = document.createElement("div");
 
-    }
+    listing.className = "listing";
 
-    button {
+    listing.innerHTML = `<strong>${name}</strong><br>$${price}`;
 
-      padding: 10px 20px;
+    document.getElementById("listings").appendChild(listing);
 
-      background: #22c55e;
+  }
 
-      border: none;
-
-      color: white;
-
-      border-radius: 5px;
-
-      cursor: pointer;
-
-    }
-
-    .listing {
-
-      background: #1e293b;
-
-      margin: 10px auto;
-
-      padding: 15px;
-
-      border-radius: 8px;
-
-      width: 80%;
-
-      max-width: 400px;
-
-    }
-
-  </style>
-
-</head>
-
-<body>
-
-  <div class="container">
-
-    <h1>FlipFinder 🚀</h1>
-
-    <p>Post items. Find deals. Flip for profit.</p>
-
-    <h3>Sell an item</h3>
-
-    <input id="itemName" placeholder="Item name">
-
-    <input id="price" placeholder="Price">
-
-    <br>
-
-    <button onclick="addItem()">Post</button>
-
-    <h3>Listings</h3>
-
-    <div id="listings"></div>
-
-  </div>
-
-  <script>
-
-    function addItem() {
-
-      const name = document.getElementById("itemName").value;
-
-      const price = document.getElementById("price").value;
-
-      if (!name || !price) return;
-
-      const listing = document.createElement("div");
-
-      listing.className = "listing";
-
-      listing.innerHTML = `<strong>${name}</strong><br>$${price}`;
-
-      document.getElementById("listings").appendChild(listing);
-
-      document.getElementById("itemName").value = "";
-
-      document.getElementById("price").value = "";
-
-    }
-
-  </script>
-
-</body>
-
-</html>
-
+</script>
