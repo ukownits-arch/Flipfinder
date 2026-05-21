@@ -14,7 +14,7 @@
 
       margin: 0;
 
-      font-family: Arial, sans-serif;
+      font-family: Arial;
 
       background: #0f172a;
 
@@ -26,61 +26,51 @@
 
     .container {
 
-      padding: 80px 20px;
+      padding: 40px 20px;
 
     }
 
-    h1 {
+    input {
 
-      font-size: 50px;
+      padding: 10px;
 
-      margin-bottom: 10px;
+      margin: 5px;
 
-    }
-
-    p {
-
-      font-size: 18px;
-
-      color: #cbd5e1;
-
-    }
-
-    .btn {
-
-      margin-top: 25px;
-
-      padding: 12px 25px;
-
-      font-size: 16px;
+      border-radius: 5px;
 
       border: none;
 
-      border-radius: 6px;
+    }
+
+    button {
+
+      padding: 10px 20px;
 
       background: #22c55e;
 
+      border: none;
+
       color: white;
+
+      border-radius: 5px;
 
       cursor: pointer;
 
     }
 
-    .btn:hover {
+    .listing {
 
-      background: #16a34a;
+      background: #1e293b;
 
-    }
+      margin: 10px auto;
 
-    .features {
+      padding: 15px;
 
-      margin-top: 60px;
+      border-radius: 8px;
 
-    }
+      width: 80%;
 
-    .feature {
-
-      margin: 20px 0;
+      max-width: 400px;
 
     }
 
@@ -94,21 +84,49 @@
 
     <h1>FlipFinder 🚀</h1>
 
-    <p>Find the best deals. Flip smarter. Make money.</p>
+    <p>Post items. Find deals. Flip for profit.</p>
 
-    <button class="btn">Get Started</button>
+    <h3>Sell an item</h3>
 
-    <div class="features">
+    <input id="itemName" placeholder="Item name">
 
-      <div class="feature">🔥 Find underpriced items instantly</div>
+    <input id="price" placeholder="Price">
 
-      <div class="feature">📊 Analyze profit potential</div>
+    <br>
 
-      <div class="feature">⚡ Flip faster than everyone else</div>
+    <button onclick="addItem()">Post</button>
 
-    </div>
+    <h3>Listings</h3>
+
+    <div id="listings"></div>
 
   </div>
+
+  <script>
+
+    function addItem() {
+
+      const name = document.getElementById("itemName").value;
+
+      const price = document.getElementById("price").value;
+
+      if (!name || !price) return;
+
+      const listing = document.createElement("div");
+
+      listing.className = "listing";
+
+      listing.innerHTML = `<strong>${name}</strong><br>$${price}`;
+
+      document.getElementById("listings").appendChild(listing);
+
+      document.getElementById("itemName").value = "";
+
+      document.getElementById("price").value = "";
+
+    }
+
+  </script>
 
 </body>
 
