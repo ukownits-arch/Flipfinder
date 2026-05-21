@@ -3,10 +3,12 @@
 <html>
 
 <head>
- <meta name="google-site-verification" content="dEY-_hWU0SffLK6USbuexlHphApBryBOPF8YL9GKq90" />
 
-<title>FlipFinder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>FlipFinder - Buy & Sell Items</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="FlipFinder is a marketplace to buy and sell items easily.">
 
   <style>
 
@@ -34,35 +36,35 @@
 
       font-size: 40px;
 
-      margin-bottom: 10px;
-
     }
 
     input {
 
       padding: 10px;
 
-      margin: 5px;
+      width: 200px;
 
-      border-radius: 5px;
+      border-radius: 6px;
 
       border: none;
 
-      width: 120px;
+      margin: 5px;
 
     }
 
     button {
 
-      padding: 10px 15px;
+      padding: 10px 20px;
 
-      background: #22c55e;
+      background: #00c896;
 
       border: none;
 
-      border-radius: 5px;
-
       color: white;
+
+      font-weight: bold;
+
+      border-radius: 6px;
 
       cursor: pointer;
 
@@ -72,20 +74,30 @@
 
       background: #1e293b;
 
-      margin: 10px auto;
+      margin: 15px auto;
 
-      padding: 10px;
+      padding: 15px;
 
-      width: 200px;
+      width: 220px;
+
+      border-radius: 10px;
+
+    }
+
+    .item img {
+
+      width: 100%;
 
       border-radius: 8px;
+
+      margin-top: 10px;
 
     }
 
   </style>
 
 </head>
-  https://ukownits-arch.github.io/Flipfinder/
+
 <body>
 
   <div class="container">
@@ -94,13 +106,13 @@
 
     <p>Buy & sell anything</p>
 
-    <input id="itemName" placeholder="Item name">
+    <input id="itemName" placeholder="Item name"><br>
 
-    <input id="price" placeholder="Price">
+    <input id="price" placeholder="Price"><br>
 
-    <br>
+    <input type="file" id="imageInput" accept="image/*"><br><br>
 
-    <button onclick="addItem()">Add Item</button>
+    <button onclick="addItem()">Add Listing</button>
 
     <div id="listings"></div>
 
@@ -108,67 +120,75 @@
 
   <script>
 
-    function loadItems() {
-
-      let saved = [];
-
-      try {
-
-        saved = JSON.parse(localStorage.getItem("listings")) || [];
-
-      } catch (e) {
-
-        saved = [];
-
-      }
-
-      saved.forEach(item => displayItem(item.name, item.price));
-
-    }
-
     function addItem() {
 
       const name = document.getElementById("itemName").value;
 
       const price = document.getElementById("price").value;
 
-      if (!name || !price) return;
+      const file = document.getElementById("imageInput").files[0];
 
-      const item = { name, price };
+      if (!name || !price || !file) {
 
-      let existing = [];
+        alert("Fill everything!");
 
-      try {
-
-        existing = JSON.parse(localStorage.getItem("listings")) || [];
-
-      } catch (e) {
-
-        existing = [];
+        return;
 
       }
 
-      existing.push(item);
+      const reader = new FileReader();
 
-      localStorage.setItem("listings", JSON.stringify(existing));
+      reader.onload = function(e) {
 
-      displayItem(name, price);
+        const image = e.target.result;
 
-      document.getElementById("itemName").value = "";
+        const item = { name, price, image };
 
-      document.getElementById("price").value = "";
+        saveItem(item);
+
+        displayItem(item);
+
+      };
+
+      reader.readAsDataURL(file);
 
     }
 
-    function displayItem(name, price) {
+    function displayItem(item) {
 
       const div = document.createElement("div");
 
       div.className = "item";
 
-      div.innerHTML = `<strong>${name}</strong><br>$${price}`;
+      div.innerHTML = `
+
+        <h3>${item.name}</h3>
+
+        <p>£${item.price}</p>
+
+        <img src="${item.image}">
+
+      `;
 
       document.getElementById("listings").appendChild(div);
+
+    }
+
+    function saveItem(item) {
+
+      const existing = JSON.parse(localStorage.getItem("listings")) || [];
+
+      existing.push(item);
+
+      localStorage.setItem("listings", JSON.stringify(existing));
+
+    }
+
+    function loadItems() {
+
+      const saved = JSON.parse(localStorage.getItem("listings")) || [];
+
+      saved.forEach(item => displayItem(item));
 
     }
 
