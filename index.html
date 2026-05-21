@@ -1,51 +1,181 @@
-<script>
+<!DOCTYPE html>
 
-  // Load saved items when page opens
+<html>
 
-  window.onload = function() {
+<head>
 
-    const saved = JSON.parse(localStorage.getItem("listings")) || [];
+  <title>FlipFinder</title>
 
-    saved.forEach(item => displayItem(item.name, item.price));
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  };
+  <style>
 
-  function addItem() {
+    body {
 
-    const name = document.getElementById("itemName").value;
+      margin: 0;
 
-    const price = document.getElementById("price").value;
+      font-family: Arial, sans-serif;
 
-    if (!name || !price) return;
+      background: #0f172a;
 
-    const item = { name, price };
+      color: white;
 
-    // Save to localStorage
+      text-align: center;
 
-    const existing = JSON.parse(localStorage.getItem("listings")) || [];
+    }
 
-    existing.push(item);
+    .container {
 
-    localStorage.setItem("listings", JSON.stringify(existing));
+      padding: 40px 20px;
 
-    displayItem(name, price);
+    }
 
-    document.getElementById("itemName").value = "";
+    h1 {
 
-    document.getElementById("price").value = "";
+      font-size: 40px;
 
-  }
+      margin-bottom: 10px;
 
-  function displayItem(name, price) {
+    }
 
-    const listing = document.createElement("div");
+    input {
 
-    listing.className = "listing";
+      padding: 10px;
 
-    listing.innerHTML = `<strong>${name}</strong><br>$${price}`;
+      margin: 5px;
 
-    document.getElementById("listings").appendChild(listing);
+      border-radius: 5px;
 
-  }
+      border: none;
 
-</script>
+      width: 120px;
+
+    }
+
+    button {
+
+      padding: 10px 15px;
+
+      background: #22c55e;
+
+      border: none;
+
+      border-radius: 5px;
+
+      color: white;
+
+      cursor: pointer;
+
+    }
+
+    .item {
+
+      background: #1e293b;
+
+      margin: 10px auto;
+
+      padding: 10px;
+
+      width: 200px;
+
+      border-radius: 8px;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>FlipFinder 🚀</h1>
+
+    <p>Buy & sell anything</p>
+
+    <input id="itemName" placeholder="Item name">
+
+    <input id="price" placeholder="Price">
+
+    <br>
+
+    <button onclick="addItem()">Add Item</button>
+
+    <div id="listings"></div>
+
+  </div>
+
+  <script>
+
+    function loadItems() {
+
+      let saved = [];
+
+      try {
+
+        saved = JSON.parse(localStorage.getItem("listings")) || [];
+
+      } catch (e) {
+
+        saved = [];
+
+      }
+
+      saved.forEach(item => displayItem(item.name, item.price));
+
+    }
+
+    function addItem() {
+
+      const name = document.getElementById("itemName").value;
+
+      const price = document.getElementById("price").value;
+
+      if (!name || !price) return;
+
+      const item = { name, price };
+
+      let existing = [];
+
+      try {
+
+        existing = JSON.parse(localStorage.getItem("listings")) || [];
+
+      } catch (e) {
+
+        existing = [];
+
+      }
+
+      existing.push(item);
+
+      localStorage.setItem("listings", JSON.stringify(existing));
+
+      displayItem(name, price);
+
+      document.getElementById("itemName").value = "";
+
+      document.getElementById("price").value = "";
+
+    }
+
+    function displayItem(name, price) {
+
+      const div = document.createElement("div");
+
+      div.className = "item";
+
+      div.innerHTML = `<strong>${name}</strong><br>$${price}`;
+
+      document.getElementById("listings").appendChild(div);
+
+    }
+
+    window.onload = loadItems;
+
+  </script>
+
+</body>
+
+</html>
