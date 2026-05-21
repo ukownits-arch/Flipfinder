@@ -220,7 +220,262 @@ function loadItems() {
 
 window.onload = loadItems;
 
+</script> 
+  <script type="module">
+
+// 🔥 Firebase imports
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
+
+// 🔥 Your config
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyADf9zrMII5ab7kcrjyXxYPRIe2KASyzh0",
+
+  authDomain: "flipfinder-24f82.firebaseapp.com",
+
+  projectId: "flipfinder-24f82",
+
+  storageBucket: "flipfinder-24f82.firebasestorage.app",
+
+  messagingSenderId: "75492891444",
+
+  appId: "1:75492891444:web:9953ddbea56902ac332361"
+
+};
+
+// 🔥 Init
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const storage = getStorage(app);
+
+// ➕ ADD ITEM (REAL DATABASE + IMAGE UPLOAD)
+
+window.addItem = async function() {
+
+  const name = document.getElementById("itemName").value;
+
+  const price = document.getElementById("price").value;
+
+  const file = document.getElementById("imageInput").files[0];
+
+  if (!name || !price || !file) {
+
+    alert("Fill everything!");
+
+    return;
+
+  }
+
+  try {
+
+    // 📤 Upload image
+
+    const storageRef = ref(storage, "images/" + Date.now());
+
+    await uploadBytes(storageRef, file);
+
+    const imageUrl = await getDownloadURL(storageRef);
+
+    // 💾 Save to database
+
+    await addDoc(collection(db, "listings"), {
+
+      name: name,
+
+      price: price,
+
+      image: imageUrl
+
+    });
+
+    alert("Item added!");
+
+    location.reload();
+
+  } catch (err) {
+
+    alert("Error: " + err.message);
+
+  }
+
+};
+
+// 🖼 DISPLAY ITEM
+
+function displayItem(item) {
+
+  const div = document.createElement("div");
+
+  div.className = "item";
+
+  div.innerHTML = `
+
+    <h3>${item.name}</h3>
+
+    <p>£${item.price}</p>
+
+    <img src="${item.image}">
+
+  `;
+
+  document.getElementById("listings").appendChild(div);
+
+}
+
+// 🔄 LOAD FROM FIREBASE (REAL SHARED DATA)
+
+async function loadItems() {
+
+  const querySnapshot = await getDocs(collection(db, "listings"));
+
+  querySnapshot.forEach(doc => {
+
+    displayItem(doc.data());
+
+  });
+
+}
+
+window.onload = loadItems;
+
 </script>
+  <script type="module">
+
+// 🔥 Firebase imports
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
+
+// 🔥 Your config
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyADf9zrMII5ab7kcrjyXxYPRIe2KASyzh0",
+
+  authDomain: "flipfinder-24f82.firebaseapp.com",
+
+  projectId: "flipfinder-24f82",
+
+  storageBucket: "flipfinder-24f82.firebasestorage.app",
+
+  messagingSenderId: "75492891444",
+
+  appId: "1:75492891444:web:9953ddbea56902ac332361"
+
+};
+
+// 🔥 Init
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const storage = getStorage(app);
+
+// ➕ ADD ITEM (REAL DATABASE + IMAGE UPLOAD)
+
+window.addItem = async function() {
+
+  const name = document.getElementById("itemName").value;
+
+  const price = document.getElementById("price").value;
+
+  const file = document.getElementById("imageInput").files[0];
+
+  if (!name || !price || !file) {
+
+    alert("Fill everything!");
+
+    return;
+
+  }
+
+  try {
+
+    // 📤 Upload image
+
+    const storageRef = ref(storage, "images/" + Date.now());
+
+    await uploadBytes(storageRef, file);
+
+    const imageUrl = await getDownloadURL(storageRef);
+
+    // 💾 Save to database
+
+    await addDoc(collection(db, "listings"), {
+
+      name: name,
+
+      price: price,
+
+      image: imageUrl
+
+    });
+
+    alert("Item added!");
+
+    location.reload();
+
+  } catch (err) {
+
+    alert("Error: " + err.message);
+
+  }
+
+};
+
+// 🖼 DISPLAY ITEM
+
+function displayItem(item) {
+
+  const div = document.createElement("div");
+
+  div.className = "item";
+
+  div.innerHTML = `
+
+    <h3>${item.name}</h3>
+
+    <p>£${item.price}</p>
+
+    <img src="${item.image}">
+
+  `;
+
+  document.getElementById("listings").appendChild(div);
+
+}
+
+// 🔄 LOAD FROM FIREBASE (REAL SHARED DATA)
+
+async function loadItems() {
+
+  const querySnapshot = await getDocs(collection(db, "listings"));
+
+  querySnapshot.forEach(doc => {
+
+    displayItem(doc.data());
+
+  });
+
+}
+
+window.onload = loadItems;
+
+</script>
+  
 
 </body>
 
