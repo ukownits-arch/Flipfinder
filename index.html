@@ -4,23 +4,17 @@
 
 <head>
 
-  <title>FlipFinder - Buy & Sell Items</title>
+  <title>FlipFinder</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="description" content="FlipFinder is a marketplace to buy and sell items easily.">
 
   <style>
 
     body {
 
-      margin: 0;
+      font-family: Arial;
 
-      font-family: Arial, sans-serif;
-
-      background: #0f172a;
-
-      color: white;
+      background: #f2f2f2;
 
       text-align: center;
 
@@ -28,69 +22,55 @@
 
     .container {
 
-      padding: 40px 20px;
+      padding: 20px;
 
     }
 
-    h1 {
-
-      font-size: 40px;
-
-    }
-
-    input {
+    input, button {
 
       padding: 10px;
 
-      width: 200px;
-
-      border-radius: 6px;
-
-      border: none;
-
       margin: 5px;
+
+      width: 80%;
+
+      max-width: 300px;
 
     }
 
     button {
 
-      padding: 10px 20px;
-
-      background: #00c896;
-
-      border: none;
+      background: black;
 
       color: white;
 
-      font-weight: bold;
+      border: none;
 
-      border-radius: 6px;
-
-      cursor: pointer;
+      border-radius: 5px;
 
     }
 
     .item {
 
-      background: #1e293b;
+      background: white;
 
       margin: 15px auto;
 
-      padding: 15px;
-
-      width: 220px;
+      padding: 10px;
 
       border-radius: 10px;
 
+      width: 90%;
+
+      max-width: 400px;
+
     }
 
-    .item img {
+    img {
 
       width: 100%;
 
-      border-radius: 8px;
-
-      margin-top: 10px;
+      border-radius: 10px;
 
     }
 
@@ -100,125 +80,147 @@
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>FlipFinder 🚀</h1>
+  <h1>🚀 FlipFinder</h1>
 
-    <p>Buy & sell anything</p>
+  <p>Buy & sell anything</p>
 
-    <input id="itemName" placeholder="Item name"><br>
+  <input id="itemName" placeholder="Item name"><br>
 
-    <input id="price" placeholder="Price"><br>
+  <input id="price" placeholder="Price"><br>
 
-    <input type="file" id="imageInput" accept="image/*"><br><br>
+  <input type="file" id="imageInput" accept="image/*"><br>
 
-    <button onclick="addItem()">Add Listing</button>
+  <button onclick="addItem()">Add Listing</button>
 
-    <div id="listings"></div>
+  <div id="listings"></div>
 
-  </div>
+</div>
 
-  <script type="module"> 
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+<!-- ✅ ONE SCRIPT BLOCK (THIS FIXES YOUR ERROR) -->
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyADf9zrMII5ab7kcrjyXxYPRIe2KASyzh0",
-    authDomain: "flipfinder-24f82.firebaseapp.com",
-    projectId: "flipfinder-24f82",
-    storageBucket: "flipfinder-24f82.firebasestorage.app",
-    messagingSenderId: "75492891444",
-    appId: "1:75492891444:web:9953ddbea56902ac332361",
-    measurementId: "G-MT3WMR0TQP"
+<script type="module">
+
+// 🔥 Firebase (ready but optional right now)
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyADf9zrMII5ab7kcrjyXxYPRIe2KASyzh0",
+
+  authDomain: "flipfinder-24f82.firebaseapp.com",
+
+  projectId: "flipfinder-24f82",
+
+  storageBucket: "flipfinder-24f82.firebasestorage.app",
+
+  messagingSenderId: "75492891444",
+
+  appId: "1:75492891444:web:9953ddbea56902ac332361",
+
+  measurementId: "G-MT3WMR0TQP"
+
+};
+
+// Initialize Firebase
+
+const app = initializeApp(firebaseConfig);
+
+const analytics = getAnalytics(app);
+
+// ➕ ADD ITEM
+
+window.addItem = function() {
+
+  const name = document.getElementById("itemName").value;
+
+  const price = document.getElementById("price").value;
+
+  const file = document.getElementById("imageInput").files[0];
+
+  if (!name || !price || !file) {
+
+    alert("Fill everything!");
+
+    return;
+
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    const item = {
+
+      name: name,
+
+      price: price,
+
+      image: e.target.result
+
+    };
+
+    saveItem(item);
+
+    displayItem(item);
+
   };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+  reader.readAsDataURL(file);
+
+};
+
+// 🖼 DISPLAY ITEM
+
+function displayItem(item) {
+
+  const div = document.createElement("div");
+
+  div.className = "item";
+
+  div.innerHTML = `
+
+    <h3>${item.name}</h3>
+
+    <p>£${item.price}</p>
+
+    <img src="${item.image}">
+
+  `;
+
+  document.getElementById("listings").appendChild(div);
+
+}
+
+// 💾 SAVE ITEM (LOCAL STORAGE)
+
+function saveItem(item) {
+
+  const existing = JSON.parse(localStorage.getItem("listings")) || [];
+
+  existing.push(item);
+
+  localStorage.setItem("listings", JSON.stringify(existing));
+
+}
+
+// 🔄 LOAD ITEMS
+
+function loadItems() {
+
+  const saved = JSON.parse(localStorage.getItem("listings")) || [];
+
+  saved.forEach(item => displayItem(item));
+
+}
+
+window.onload = loadItems;
+
 </script>
-
-
-
-    function addItem() {
-
-      const name = document.getElementById("itemName").value;
-
-      const price = document.getElementById("price").value;
-
-      const file = document.getElementById("imageInput").files[0];
-
-      if (!name || !price || !file) {
-
-        alert("Fill everything!");
-
-        return;
-
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = function(e) {
-
-        const image = e.target.result;
-
-        const item = { name, price, image };
-
-        saveItem(item);
-
-        displayItem(item);
-
-      };
-
-      reader.readAsDataURL(file);
-
-    }
-
-    function displayItem(item) {
-
-      const div = document.createElement("div");
-
-      div.className = "item";
-
-      div.innerHTML = `
-
-        <h3>${item.name}</h3>
-
-        <p>£${item.price}</p>
-
-        <img src="${item.image}">
-
-      `;
-
-      document.getElementById("listings").appendChild(div);
-
-    }
-
-    function saveItem(item) {
-
-      const existing = JSON.parse(localStorage.getItem("listings")) || [];
-
-      existing.push(item);
-
-      localStorage.setItem("listings", JSON.stringify(existing));
-
-    }
-
-    function loadItems() {
-
-      const saved = JSON.parse(localStorage.getItem("listings")) || [];
-
-      saved.forEach(item => displayItem(item));
-
-    }
-
-    window.onload = loadItems;
-
-  </script>
 
 </body>
 
